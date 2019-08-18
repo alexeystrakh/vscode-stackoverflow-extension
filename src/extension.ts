@@ -1,5 +1,6 @@
 'use strict';
 
+
 import * as vscode from 'vscode';
 import * as request from "request-promise-native";
 
@@ -8,6 +9,7 @@ const opn = require('opn');
 export function activate(context: vscode.ExtensionContext) {
 
     const searchBySelection = vscode.commands.registerCommand('extension.stackoverflow-search-selection', async () => {
+        //const ex = getExceptionDetails();
         const searchTerm = getSelectedText();
         await executeSearch(searchTerm);
     });
@@ -75,8 +77,34 @@ async function executeSearch(searchTerm: string): Promise<void> {
     const selectedQuestionUrl = selectedQuestionMeta ? selectedQuestionMeta.url : stackoverflowSearchUrl;
     if (selectedQuestionUrl) {
         opn(selectedQuestionUrl);
+        // await openUrlInTab(selectedQuestionUrl, selectedQuestion!);
     }
 }
+
+// async function getExceptionDetails(): Promise<any> {
+//     const session = vscode.debug.activeDebugSession;
+//     if (!session) {
+//         return;
+//     }
+
+//     try {
+//         //const response = await session.customRequest('evaluate', { expression: 'args' });
+//         const response = await session.customRequest('stackTrace', { threadId: 1 });
+//         console.log(response);
+//     } catch (error) {
+//         console.log(error);
+//     }
+
+//     // const stackTrace = await session.customRequest('stackTrace', { threadId: 1 });
+//     // const frameId = stackTrace.stackFrames[0].id;
+//     // const response = await session.customRequest('evaluate', { expression: '$exception', frameId: frameId });
+//     // const ex = response.result;
+//     // console.log(ex);
+
+//     // return ex;
+
+//     return null;
+// }
 
 function getSelectedText(): string {
     const editor = vscode.window.activeTextEditor;
@@ -104,3 +132,26 @@ function getSelectedText(): string {
     result = result.trim();
     return result;
 }
+
+// async function downloadQuestionContent(url: string): Promise<string> {
+//     var options = {
+//         uri: url,
+//     };
+
+//     const result = await request.get(options);
+//     return result;
+// }
+
+// async function openUrlInTab(url: string, tabTitle: string): Promise<void> {
+//     const panel = vscode.window.createWebviewPanel(
+//         'stackoverflow-search-question', // Identifies the type of the webview. Used internally
+//         tabTitle,
+//         vscode.ViewColumn.One,
+//         {
+//             enableScripts: true,
+//             enableCommandUris: true,
+//         }
+//     );
+//     const questionHtml = await downloadQuestionContent(url);
+//     panel.webview.html = questionHtml;
+// }
