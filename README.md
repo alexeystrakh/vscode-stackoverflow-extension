@@ -16,6 +16,7 @@ You can also narrow your search with tags by specifying them in square brackets 
 - Open selected post in a default browser
 - Execute Google search as an option if no relevant results found
 - Execute Stackoverflow search as an option if no relevant results found
+- Ability to specify tags to narrow search results via `[tag1;tag2;tagX]`
 
 ## Release Notes
 
