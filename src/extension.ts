@@ -39,11 +39,35 @@ async function executeSearch(searchTerm: string): Promise<void> {
 
     searchTerm = searchTerm.trim();
     console.log(`User initiated a stackoverflow search with [${searchTerm}] search term`);
-    const encodedSearchTerm = encodeURIComponent(searchTerm);
+    
+    // process tags
+    const tags: string[] = [];
+    const regex = /\[(.+?)\]/gm;
+    let tagsMatch;
+    let updatedSearchTerm = searchTerm;
+    while ((tagsMatch = regex.exec(updatedSearchTerm)) !== null) {
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (tagsMatch.index === regex.lastIndex) {
+            regex.lastIndex++;
+        }
+        
+        // The result can be accessed through the `m`-variable.
+        tagsMatch.forEach((match, groupIndex) => {
+            if(groupIndex === 0) { // full match without group for replace
+                updatedSearchTerm = updatedSearchTerm.replace(match, "").trim();
+            } else if(groupIndex === 1) { // not a full match
+                tags.push(match);
+            }
+        });  
+    }
+
     const stackoverflowApiKey = '<your_stackoverflow_api_key>';
-    const apiSearchUrl = `https://api.stackexchange.com/2.2/search?order=desc&sort=relevance&intitle=${encodedSearchTerm}&site=stackoverflow&key=${stackoverflowApiKey}`;
-    const stackoverflowSearchUrl = `https://stackoverflow.com/search?q=${encodedSearchTerm}`;
-    const googleSearchUrl = `https://www.google.com/search?q=${encodedSearchTerm}`;
+    const encodedTagsString = encodeURIComponent(tags.join(';'));
+    const encodedAPISearchTerm = encodeURIComponent(updatedSearchTerm);
+    const encodedWebSearchTerm = encodeURIComponent(searchTerm);
+    const apiSearchUrl = `https://api.stackexchange.com/2.2/search?order=desc&sort=relevance&intitle=${encodedAPISearchTerm}&tagged=${encodedTagsString}&site=stackoverflow&key=${stackoverflowApiKey}`;
+    const stackoverflowSearchUrl = `https://stackoverflow.com/search?q=${encodedWebSearchTerm}`;
+    const googleSearchUrl = `https://www.google.com/search?q=${encodedWebSearchTerm}`;
     const uriOptions = {
         uri: apiSearchUrl,
         json: true,

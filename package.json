@@ -3,8 +3,9 @@
     "displayName": "Stackoverflow Instant Search",
     "icon": "images/stackoverflow-icon-512x512.png",
     "description": "Instant Stackoverflow search staying in a context of your favorite vs-code. Select a line and initiate the instance search with a `cmd+h` (help) hotkey",
-    "version": "1.0.7",
+    "version": "1.2.0",
     "publisher": "Alexey-Strakh",
+    "repository": "https://github.com/alexeystrakh/vscode-stackoverflow-extension",
     "engines": {
         "vscode": "^1.29.0"
     },
@@ -44,12 +45,14 @@
             }
         ],
         "menus": {
-            "editor/context": [{
-                "command": "extension.stackoverflow-search-selection",
-                "alt": "extension.stackoverflow-search",
-                "group": "z_commands",
-                "when": "editorHasSelection"
-            }]
+            "editor/context": [
+                {
+                    "command": "extension.stackoverflow-search-selection",
+                    "alt": "extension.stackoverflow-search",
+                    "group": "z_commands",
+                    "when": "editorHasSelection"
+                }
+            ]
         }
     },
     "scripts": {
